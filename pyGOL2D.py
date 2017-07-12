@@ -285,7 +285,7 @@ def writeBuffer(buffer,myData):
       
        
 #uncomment when ready to test performance
-start_time = time.time()
+#start_time = time.time()
 
 Nx = 90;
 Ny = 90;
@@ -324,11 +324,9 @@ myInner = findInner(myPart,myBorder)
 #make an even and odd data set so updating the board is possible
 myDataE = makeData(myPart)
 myDataO = deepcopy(myDataE)
-"""
 buffer = [0 for i in range(len(myDataE))]
 for i in range(len(myDataE)):
   buffer[i] = myDataE[i].data
-"""
 
 #makes the initial sending array(use updateSend() for following calls)
 send = sendIt(myDataE,myBorder,myNeighbors,inv_n)
@@ -358,7 +356,6 @@ for i in range(gen):
   #Use the collected info to calculate border cases
   if i%2==0:
     calcBorder(myPart,myBorder,get,myDataE,myDataO,Nx)
-    """
     writeBuffer(buffer,myDataE)
     fname = "data_" + str(i) + ".b_dat"
     amode = MPI.MODE_WRONLY | MPI.MODE_CREATE #<- bit mask for file mode
@@ -366,11 +363,9 @@ for i in range(gen):
     offset = intOffset*np.dtype(np.int32).itemsize
     fh.Write_at_all(offset,np.array(buffer).astype('int32'))
     fh.Close()
-    """
     updateSend(myDataE, send)
   else:
     calcBorder(myPart,myBorder,get,myDataO,myDataE,Nx)
-    """
     writeBuffer(buffer,myDataO)
     fname = "data_" + str(i) + ".b_dat"
     amode = MPI.MODE_WRONLY | MPI.MODE_CREATE #<- bit mask for file mode
@@ -378,7 +373,6 @@ for i in range(gen):
     offset = intOffset*np.dtype(np.int32).itemsize
     fh.Write_at_all(offset,np.array(buffer).astype('int32'))
     fh.Close()
-    """
     updateSend(myDataO, send)
 
   
@@ -387,9 +381,8 @@ for i in range(gen):
 
 
 #uncomment when ready for performance testing
-print (time.time() - start_time)
+#print (time.time() - start_time)
 
-"""
 # write to disk a partition map giving the global point number in order for all partitions
 filename = 'partMap.b_dat'
 amode = MPI.MODE_WRONLY | MPI.MODE_CREATE #<- bit mask for file mode
@@ -412,4 +405,3 @@ if rank==0:
     origin = [0,0,0]
     spacing = [1,1,1]
     writeVTK(data,'state',vtkname,dims,origin,spacing)
-"""
