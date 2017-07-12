@@ -340,6 +340,7 @@ for i in range(gen):
   #sends all of the information out to the different ranks
   for j in range(len(send)):
     req = comm.isend(send[j],dest=(myNeighbors[j]), tag=(rank+2019))
+    req.wait()
 
   #while info is sent do the inner parts
   if i%2==0:
