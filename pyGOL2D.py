@@ -206,7 +206,7 @@ def calcBorder(myPart,myBorder,get,myData1,myData2,Nx):
           break
       if myPart[j]==((myBorder[i].point-1+Nx+(Nx*Nx))%(Nx*Nx)):
         nTot += myData2[j].data
-        if nTot == 4:
+        if nTot == 4 or n == 8:
           break
       if myPart[j]==((myBorder[i].point-1-Nx+(Nx*Nx))%(Nx*Nx)):
         nTot += myData2[j].data
@@ -287,8 +287,9 @@ def writeBuffer(buffer,myData):
 #uncomment when ready to test performance
 #start_time = time.time()
 
-Nx = 90;
-Ny = 90;
+#dimensions of the board(have to be the same)
+Nx = 100;
+Ny = 100;
 numPart = size
 
 # rank 0 process do the partitioning.
@@ -298,10 +299,9 @@ numPart = size
 partFileName = "partition.gol"
 
 if rank==0:
-    partVert = gp.makePartition(Nx,Ny,numPart);
-    #print "partVert = ",partVert #<--- printed as a Python list
-    # WORKS: THE GLBOAL LOCATIONS ARE LIKE A GRAPH 0 IS BOTTOM LEFT
-    np.array(partVert).astype('int32').tofile(partFileName) #saved as a numpy array
+  partVert = gp.makePartition(Nx,Ny,numPart);
+  # WORKS: THE GLBOAL LOCATIONS ARE LIKE A GRAPH 0 IS BOTTOM LEFT
+  np.array(partVert).astype('int32').tofile(partFileName) #saved as a numpy array
    
 comm.Barrier() #everyone waits until rank 0 is done
 
@@ -334,6 +334,7 @@ get = deepcopy(send)
 
 #START OF SIMULATION!!!!!!!
 ##################################################################
+#number of generations
 gen = 100
 for i in range(gen):
 
